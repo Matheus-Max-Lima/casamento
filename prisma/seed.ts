@@ -132,6 +132,38 @@ async function main() {
     await prisma.vendor.create({ data: { ...vendor, weddingId } });
   }
 
+  // Owner account
+  const ownerPassword = await bcrypt.hash('owner@2025!', 12)
+  await prisma.user.upsert({
+    where: { email: 'matheus.max0105@gmail.com' },
+    update: { role: 'owner', plan: 'enterprise' },
+    create: {
+      email: 'matheus.max0105@gmail.com',
+      name: 'Matheus (Owner)',
+      password: ownerPassword,
+      role: 'owner',
+      plan: 'enterprise',
+      emailVerified: new Date(),
+    },
+  })
+
+  // Default feature flags
+  const defaultFlags = [
+    { key: 'ai_assistant', description: 'Assistente Valentina (IA)', enabled: true, plans: ['pro', 'enterprise', 'owner'] },
+    { key: 'spotify_integration', description: 'Integração com Spotify', enabled: true, plans: ['pro', 'enterprise', 'owner'] },
+    { key: 'google_calendar', description: 'Integração com Google Calendar', enabled: true, plans: ['pro', 'enterprise', 'owner'] },
+    { key: 'pdf_export', description: 'Exportar PDF', enabled: true, plans: ['pro', 'enterprise', 'owner'] },
+    { key: 'csv_import', description: 'Importar CSV', enabled: true, plans: ['pro', 'enterprise', 'owner'] },
+    { key: 'rsvp_public', description: 'RSVP público', enabled: true, plans: ['pro', 'enterprise', 'owner'] },
+  ]
+  for (const flag of defaultFlags) {
+    await prisma.featureFlag.upsert({
+      where: { key: flag.key },
+      update: {},
+      create: flag,
+    })
+  }
+
   console.log("✅ Seed completed!");
 }
 

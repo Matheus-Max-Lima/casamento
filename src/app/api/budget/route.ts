@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionAndWedding } from "@/lib/api-helper";
 import { prisma } from "@/lib/prisma";
+import { checkLimit } from "@/lib/plan-gates";
+import { logAudit } from "@/lib/audit";
 
 export async function GET() {
   const ctx = await getSessionAndWedding();
@@ -24,6 +26,11 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const ctx = await getSessionAndWedding();
   if ("error" in ctx) return ctx.error;
+
+  const gate = await checkLimit(ctx.weddingId, 'budgetItems', ctx.plan, ctx.role);
+  if (!gate.allowed) {
+    return NextResponse.json({ error: 'LIMIT_REACHED', resource: 'budgetItems', current: gate.current, limit: gate.limit, plan: ctx.plan }, { status: 402 });
+  }
 
   const data = await req.json();
   const item = await prisma.budgetItem.create({

@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
                 userId: existingUser.id,
                 brideName: existingUser.name ?? "A definir",
                 groomName: "A definir",
+                weddingDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
                 totalBudget: 0,
               },
             });
@@ -79,12 +80,19 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        const dbUser = await prisma.user.update({
+          where: { id: user.id },
+          data: { lastLoginAt: new Date(), loginCount: { increment: 1 } },
+          select: { role: true },
+        });
+        token.role = dbUser.role;
       }
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
         (session.user as any).id = token.id as string;
+        (session.user as any).role = token.role as string;
       }
       return session;
     },

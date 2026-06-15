@@ -78,12 +78,7 @@ export default function RegisterPage() {
         return
       }
 
-      const signInResult = await signIn('credentials', {
-        email: form.email,
-        password: form.password,
-        redirect: false,
-      })
-
+      const signInResult = await signIn('credentials', { email: form.email, password: form.password, redirect: false })
       if (signInResult?.ok) {
         router.push('/dashboard')
       } else {

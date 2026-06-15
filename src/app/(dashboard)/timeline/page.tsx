@@ -8,7 +8,6 @@ type TimelineItem = {
   id: string;
   title: string;
   description?: string;
-  date?: string;
   startTime: string;
   endTime?: string;
   location?: string;
@@ -29,7 +28,6 @@ const CAT_MAP = Object.fromEntries(CATEGORIES.map((c) => [c.value, c]));
 const emptyForm = {
   title: "",
   description: "",
-  date: "",
   startTime: "08:00",
   endTime: "",
   location: "",
@@ -182,7 +180,6 @@ export default function TimelinePage() {
     setForm({
       title: item.title,
       description: item.description || "",
-      date: item.date || "",
       startTime: item.startTime,
       endTime: item.endTime || "",
       location: item.location || "",
@@ -305,15 +302,6 @@ export default function TimelinePage() {
                   className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
                 />
               </div>
-              <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-medium text-stone-600">Data do evento</label>
-                <input
-                  type="date"
-                  value={form.date}
-                  onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                  className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
-                />
-              </div>
               <div className="space-y-1">
                 <label className="text-xs font-medium text-stone-600">Horário de início *</label>
                 <input
@@ -423,14 +411,9 @@ export default function TimelinePage() {
                     <div className={`flex-1 bg-white rounded-2xl shadow-sm border border-stone-100 p-4 hover:shadow-md transition-shadow print:shadow-none print:border-stone-200`}>
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          {/* Date + Time */}
-                          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                          {/* Time */}
+                          <div className="flex items-center gap-2 mb-1.5">
                             <Clock className="w-3.5 h-3.5 text-stone-400 flex-shrink-0" />
-                            {item.date && (
-                              <span className="text-xs font-medium text-stone-500">
-                                {new Date(item.date + 'T00:00:00').toLocaleDateString('pt-BR')}
-                              </span>
-                            )}
                             <span className="text-xs font-semibold text-[#f43f5e]">
                               {item.startTime}
                               {item.endTime && ` – ${item.endTime}`}

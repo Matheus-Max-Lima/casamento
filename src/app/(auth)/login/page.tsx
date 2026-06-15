@@ -25,17 +25,11 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      })
-
+      const result = await signIn('credentials', { email, password, redirect: false })
       if (result?.error) {
         setError('Email ou senha inválidos.')
         return
       }
-
       router.push('/dashboard')
     } catch {
       setError('Erro de conexão. Verifique sua internet e tente novamente.')

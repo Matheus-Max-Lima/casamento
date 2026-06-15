@@ -3,13 +3,16 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import NotificationBell from "./NotificationBell";
+import ImpersonationBanner from "./ImpersonationBanner";
 import { Menu } from "lucide-react";
 
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-stone-50 overflow-hidden">
+    <div className="flex flex-col h-screen bg-stone-50 overflow-hidden">
+      <ImpersonationBanner />
+      <div className="flex flex-1 overflow-hidden">
       {/* Desktop sidebar */}
       <div className="hidden lg:flex lg:flex-shrink-0 lg:w-60">
         <Sidebar />
@@ -51,6 +54,7 @@ export default function DashboardShell({ children }: { children: React.ReactNode
         <main className="flex-1 overflow-y-auto">
           {children}
         </main>
+      </div>
       </div>
     </div>
   );

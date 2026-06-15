@@ -330,7 +330,7 @@ export default function LandingPage() {
                 badge: null,
                 features: ['Tudo do Premium', 'Consultoria personalizada', 'Relatórios avançados', 'Integrações (WhatsApp, Email)', 'Múltiplos casamentos', 'API de acesso'],
                 cta: 'Falar com Consultor',
-                href: '/register?plan=premium',
+                href: '/contact',
               },
             ].map((plan) => (
               <div key={plan.name} style={{ background: plan.highlighted ? 'linear-gradient(135deg, #fff5f6, #fdf0f0)' : '#fdf8f5', border: plan.highlighted ? '2px solid #f43f5e' : '1px solid #fce7e7', borderRadius: '1.5rem', padding: '2rem', position: 'relative', transform: plan.highlighted ? 'scale(1.03)' : 'scale(1)' }}>

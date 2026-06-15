@@ -5,17 +5,16 @@ import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
   const userId = (session.user as any).id as string;
+  const { id } = await params;
 
-  const notification = await prisma.notification.findUnique({
-    where: { id: params.id },
-  });
+  const notification = await prisma.notification.findUnique({ where: { id } });
 
   if (!notification || notification.userId !== userId) {
     return NextResponse.json(
@@ -25,7 +24,7 @@ export async function PATCH(
   }
 
   const updated = await prisma.notification.update({
-    where: { id: params.id },
+    where: { id },
     data: { read: true },
   });
 
@@ -34,17 +33,16 @@ export async function PATCH(
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
   const userId = (session.user as any).id as string;
+  const { id } = await params;
 
-  const notification = await prisma.notification.findUnique({
-    where: { id: params.id },
-  });
+  const notification = await prisma.notification.findUnique({ where: { id } });
 
   if (!notification || notification.userId !== userId) {
     return NextResponse.json(
@@ -53,7 +51,7 @@ export async function DELETE(
     );
   }
 
-  await prisma.notification.delete({ where: { id: params.id } });
+  await prisma.notification.delete({ where: { id } });
 
   return new NextResponse(null, { status: 204 });
 }

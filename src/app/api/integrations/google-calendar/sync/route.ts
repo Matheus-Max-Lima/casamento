@@ -21,9 +21,9 @@ async function ensureCalendar(token: string, existingCalendarId: string | null):
   return cal.id as string;
 }
 
-function buildEventDateTime(date: Date | string, time: string) {
+function buildEventDateTime(weddingDate: Date, time: string) {
   const [h, m] = time.split(":").map(Number);
-  const dt = typeof date === "string" ? new Date(date + "T00:00:00") : new Date(date);
+  const dt = new Date(weddingDate);
   dt.setHours(h, m, 0, 0);
   return dt.toISOString();
 }
@@ -62,10 +62,9 @@ export async function POST() {
   let synced = 0;
 
   for (const item of items) {
-    const itemDate = item.date ?? weddingDate;
-    const startDateTime = buildEventDateTime(itemDate, item.startTime);
+    const startDateTime = buildEventDateTime(weddingDate, item.startTime);
     const endDateTime = item.endTime
-      ? buildEventDateTime(itemDate, item.endTime)
+      ? buildEventDateTime(weddingDate, item.endTime)
       : new Date(new Date(startDateTime).getTime() + 60 * 60 * 1000).toISOString();
 
     const event = {

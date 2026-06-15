@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   LayoutDashboard,
   CheckSquare,
@@ -22,6 +22,7 @@ import {
   Heart,
   X,
   Plug,
+  Settings,
 } from "lucide-react";
 
 const navigation = [
@@ -48,6 +49,8 @@ interface SidebarProps {
 
 export default function Sidebar({ onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const userRole = (session?.user as any)?.role ?? 'user';
 
   return (
     <div className="flex flex-col h-full bg-white border-r border-stone-100">
@@ -85,6 +88,25 @@ export default function Sidebar({ onClose }: SidebarProps) {
           );
         })}
       </nav>
+
+      {/* Admin link */}
+      {(userRole === 'owner' || userRole === 'admin') && (
+        <div className="px-3 pb-2">
+          <hr className="border-stone-100 mb-2" />
+          <Link
+            href="/admin"
+            onClick={onClose}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              pathname?.startsWith('/admin')
+                ? 'bg-purple-50 text-purple-700'
+                : 'text-purple-600 hover:bg-purple-50'
+            }`}
+          >
+            <Settings className="w-4 h-4 flex-shrink-0" />
+            Painel Admin
+          </Link>
+        </div>
+      )}
 
       {/* Sign out */}
       <div className="px-3 py-4 border-t border-stone-100">

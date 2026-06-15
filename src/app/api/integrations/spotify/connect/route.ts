@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json({ error: "Spotify não configurado" }, { status: 503 });
   }
 
-  const redirectUri = process.env.SPOTIFY_REDIRECT_URI ?? `${process.env.NEXTAUTH_URL}/api/integrations/spotify/callback`;
+  const redirectUri = `${process.env.NEXTAUTH_URL}/api/integrations/spotify/callback`;
   const scope = "playlist-read-private playlist-modify-public playlist-modify-private";
 
   const params = new URLSearchParams({
